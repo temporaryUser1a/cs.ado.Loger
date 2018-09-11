@@ -13,7 +13,7 @@ namespace DbLoger
             var now = DateTime.Now;
             var machName = Environment.MachineName;
             var userName = Environment.UserName;
-            DataBaseOperations.AddLogData(now, machName, userName, "Logout", null);
+            DataBaseOperations.AddLogData(now, machName, userName, "Login", null);
         }
     }
 }

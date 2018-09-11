@@ -8,25 +8,38 @@ namespace DbLoger
 {
     public class GetInfoEvent : IEvent
     {
-        private DateTime startPoint;
-        private DateTime endPoint;
-        private bool defaultTime;
-        
+        private DateTime from;
+        private DateTime to;
+        private bool isDefault;
+
         public GetInfoEvent()
         {
-            defaultTime = true;
+            isDefault = true;
         }
-
-        public GetInfoEvent(DateTime start, DateTime end)
+        
+        public GetInfoEvent(DateTime from, DateTime to)
         {
-            defaultTime = false;
-            startPoint = start;
-            endPoint = end;
+            isDefault = false;
+            this.from = from;
+            this.to = to;
         }
 
         public void Execute()
         {
-
+            DateTime now;
+            DateTime yesterday;
+            if (isDefault)
+            {
+                now = DateTime.Now;
+                yesterday = new DateTime(now.Year, now.Month, now.Day - 1);
+            }
+            else
+            {
+                now = to;
+                yesterday = from;
+            }
+            var dt = DataBaseOperations.GetLogData(yesterday, now);
+            ConsoleTools.DisplayTable(dt);
         }
     }
 }

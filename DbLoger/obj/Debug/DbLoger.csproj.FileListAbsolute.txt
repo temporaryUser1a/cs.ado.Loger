@@ -1,0 +1,7 @@
+C:\Users\student\.ssh\cs.ado.Loger\DbLoger\bin\Debug\DbLoger.exe.config
+C:\Users\student\.ssh\cs.ado.Loger\DbLoger\bin\Debug\DbLoger.exe
+C:\Users\student\.ssh\cs.ado.Loger\DbLoger\bin\Debug\DbLoger.pdb
+C:\Users\student\.ssh\cs.ado.Loger\DbLoger\obj\Debug\DbLoger.csprojResolveAssemblyReference.cache
+C:\Users\student\.ssh\cs.ado.Loger\DbLoger\obj\Debug\DbLoger.csproj.CoreCompileInputs.cache
+C:\Users\student\.ssh\cs.ado.Loger\DbLoger\obj\Debug\DbLoger.exe
+C:\Users\student\.ssh\cs.ado.Loger\DbLoger\obj\Debug\DbLoger.pdb

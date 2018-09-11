@@ -21,6 +21,8 @@ namespace DbLoger
                 operation = new LoginEvent();
             else if (String.Compare(args[0], "logout", true) == 0)
                 operation = new LogoutEvent();
+            else if (args.Length == 2)
+                operation = new GetInfoEvent(Convert.ToDateTime(args[0]), Convert.ToDateTime(args[1]));
             else
                 operation = new UndefinedEvent();
             operation.Execute();

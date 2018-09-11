@@ -1,26 +1,32 @@
 ﻿using System;
 using System.Data;
 using System.Data.OleDb;
+using System.Data.Sql;
+using System.Data.SqlClient;
 
 namespace DbLoger
 {
     public static class DataBaseOperations
     {
+        private static readonly string connectionString = @"Data Source=DESKTOP-PC73D7E\SQLEXPRESS;Initial Catalog=Loger;Integrated Security=True";
+
         public static void AddLogData(DateTime dt, string machName,
             string userName, string eventType, int? duration)
         {
-            string connectionString = @"Data Source=DESKTOP-PC73D7E\MSSQLSERVER1;Initial Catalog=Loger;Integrated Security=True";
-            OleDbConnection connection = new OleDbConnection(connectionString);
+            SqlConnection connection = new SqlConnection(connectionString);
             try
             {
                 connection.Open();
-                OleDbCommand command = new OleDbCommand("Main.AddToInfo", connection);
+                SqlCommand command = new SqlCommand("Main.AddToInfo", connection);
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@event_type", eventType);
                 command.Parameters.AddWithValue("@event_date", dt);
                 command.Parameters.AddWithValue("@machine_name", machName);
                 command.Parameters.AddWithValue("@user_name", userName);
-                command.Parameters.AddWithValue("@duration", duration);
+                if (duration == null)
+                    command.Parameters.AddWithValue("@duration", DBNull.Value);
+                else
+                    command.Parameters.AddWithValue("@duration", duration);
                 command.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -34,16 +40,18 @@ namespace DbLoger
             }
         }
 
-        // last 24 hours
-        public static DataTable GetLogData()
+        public static DataTable GetLogData(DateTime from, DateTime to)
         {
-            string connectionString = @"Data Source=DESKTOP-PC73D7E\MSSQLSERVER1;Initial Catalog=Loger;Integrated Security=True";
-            OleDbConnection connection = new OleDbConnection(connectionString);
+            DataTable dt = new DataTable();
+            SqlConnection connection = new SqlConnection(connectionString);
             try
             {
                 connection.Open();
-                OleDbCommand command = new OleDbCommand("SELECT * FROM Main.AddToInfo WHERE event_date BETWEEN DATEADD(day, -1, GETDATE()) AND GETDATE()", connection);
-                command.ExecuteNonQuery();
+                SqlCommand command = new SqlCommand("SELECT * FROM Main.Info WHERE event_date BETWEEN @from AND @to", connection);
+                command.Parameters.Add("@from", SqlDbType.DateTime).Value = from;
+                command.Parameters.Add("@to", SqlDbType.DateTime).Value = to;
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dt);
             }
             catch (Exception ex)
             {
@@ -54,8 +62,7 @@ namespace DbLoger
                 if (connection != null)
                     connection.Close();
             }
-
-            return null;
+            return dt;
         }
     }
 }
