@@ -13,8 +13,10 @@ namespace DbLoger
             var now = DateTime.Now;
             var machName = Environment.MachineName;
             var userName = Environment.UserName;
-            var duration = Environment.TickCount / 1000;
-            DataBaseOperations.AddLogData(now, machName, userName, "Logout", duration);
+            var lastRow = DataBaseOperations.GetLastRow(machName, userName);
+            var lastDate =  (DateTime)lastRow["event_date"];
+            var duration = DateTime.Now - lastDate;
+            DataBaseOperations.AddLogData(now, machName, userName, "Logout", duration.Seconds);
         }
     }
 }

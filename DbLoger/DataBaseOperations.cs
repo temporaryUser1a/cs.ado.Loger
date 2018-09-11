@@ -40,6 +40,31 @@ namespace DbLoger
             }
         }
 
+        public static DataRow GetLastRow(string machName, string userName)
+        {
+            DataTable dt = new DataTable();
+            SqlConnection connection = new SqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand("SELECT * FROM Main.Info WHERE machine_name = @machName AND user_name = @userName AND event_id = 1", connection);
+                command.Parameters.AddWithValue("@machName", machName);
+                command.Parameters.AddWithValue("@userName", userName);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dt);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+            }
+            finally
+            {
+                if (connection != null)
+                    connection.Close();
+            }
+            return dt.Rows[dt.Rows.Count - 1];
+        }
+
         public static DataTable GetLogData(DateTime from, DateTime to)
         {
             DataTable dt = new DataTable();
